@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AmiguGigi &ndash; Amigurumis Tejidos con Amor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --dark:  #4A3548;
+      --blue:  #B8B8F4;
+      --lilac: #D7B8F4;
+      --cream: #F5E2C8;
+      --white: #FEFAFF;
+      --pink:  #F4C5D7;
+      --mint:  #C5F4E0;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Nunito', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
+
+    /* ── BLOB BG ── */
+    .blob-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    @keyframes blobFloat { from { transform: scale(1) translate(0,0); opacity:.3; } to { transform: scale(1.2) translate(25px,18px); opacity:.5; } }
+    .blob-bg ellipse { animation: blobFloat 9s ease-in-out infinite alternate; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 40px;
+      background: rgba(255,255,255,0.82); backdrop-filter: blur(16px);
+      border-bottom: 2px solid var(--lilac);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { height: 56px; width: auto; object-fit: contain; transition: transform .3s; }
+    .nav-logo img:hover { transform: rotate(-8deg) scale(1.08); }
+    .nav-brand { font-family: 'Fredoka One', cursive; font-size: 1.55rem; color: var(--dark); }
+    .nav-links { display: flex; gap: 26px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-weight: 700; font-size: .95rem; color: var(--dark);
+      position: relative; transition: color .25s; padding-bottom: 2px;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-3px; left:0; right:0;
+      height:3px; border-radius:10px; background:var(--lilac);
+      transform:scaleX(0); transition:transform .25s;
+    }
+    .nav-links a:hover { color:#7B5EA7; }
+    .nav-links a:hover::after { transform:scaleX(1); }
+
+    /* ── KEYFRAMES ── */
+    @keyframes floatBounce { 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-18px) rotate(3deg); } }
+    @keyframes floatBounceAlt { 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-14px) rotate(-4deg); } }
+    @keyframes wiggle { 0%,100%{ transform:rotate(-8deg); } 50%{ transform:rotate(8deg); } }
+    @keyframes pulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.06); } }
+    @keyframes shimmer { 0%{ background-position:200% center; } 100%{ background-position:-200% center; } }
+    @keyframes spin { to{ transform:rotate(360deg); } }
+    @keyframes borderGlow { 0%,100%{ box-shadow: 0 0 20px rgba(215,184,244,0.6), 0 8px 32px rgba(74,53,72,.12); } 50%{ box-shadow: 0 0 40px rgba(184,184,244,0.8), 0 8px 40px rgba(74,53,72,.18); } }
+    @keyframes cardHover { 0%{ transform:translateY(0) scale(1) rotate(0deg); } 100%{ transform:translateY(-10px) scale(1.03) rotate(1deg); } }
+    @keyframes heroImgFloat { 0%,100%{ transform:translateY(0) scale(1) rotate(-1deg); } 50%{ transform:translateY(-16px) scale(1.03) rotate(1.5deg); } }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 40px;
+      padding: 110px 60px 70px;
+      background: linear-gradient(135deg, var(--cream) 0%, var(--lilac) 55%, var(--blue) 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-text { z-index: 2; }
+    .hero-badge {
+      display: inline-block; background: var(--pink); color: var(--dark);
+      border-radius: 999px; padding: 6px 22px; font-size: .84rem;
+      font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 18px; border: 2px solid #e8a8c0;
+    }
+    .hero-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.6rem,5.5vw,4.2rem);
+      line-height: 1.1; color: var(--dark); margin-bottom: 20px;
+    }
+    .hero-title span { color: #7B5EA7; }
+    .hero-desc { font-size: 1.1rem; line-height: 1.7; color: #5a4060; max-width: 480px; margin-bottom: 36px; }
+    .btn-primary {
+      display: inline-block; background: var(--dark); color: var(--cream);
+      padding: 14px 36px; border-radius: 999px; font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem; text-decoration: none;
+      transition: transform .25s, box-shadow .25s;
+      box-shadow: 0 4px 18px rgba(74,53,72,.3);
+    }
+    .btn-primary:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 26px rgba(74,53,72,.4); }
+    .btn-outline {
+      display: inline-block; background: transparent; color: var(--dark);
+      padding: 14px 36px; border-radius: 999px; font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem; text-decoration: none; border: 3px solid var(--dark);
+      margin-left: 14px; transition: all .25s;
+    }
+    .btn-outline:hover { background: var(--dark); color: var(--cream); }
+
+    /* Hero image bubble */
+    .hero-img-wrap {
+      display: flex; justify-content: center; align-items: center;
+      position: relative; z-index: 2;
+    }
+    .hero-bubble {
+      background: rgba(255,255,255,.7);
+      border-radius: 50%; width: 360px; height: 360px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 12px 60px rgba(123,94,167,.28), 0 0 0 12px rgba(255,255,255,.4);
+      border: 6px solid rgba(255,255,255,.85);
+      animation: borderGlow 3.5s ease-in-out infinite;
+      overflow: hidden; position: relative;
+    }
+    .hero-bubble img {
+      width: 90%; height: 90%; object-fit: contain;
+      animation: heroImgFloat 4.5s ease-in-out infinite;
+      filter: drop-shadow(0 8px 24px rgba(74,53,72,.18));
+    }
+    /* Decorative ring around hero bubble */
+    .hero-bubble::before {
+      content: '';
+      position: absolute; inset: -12px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--lilac), var(--blue), var(--pink), var(--lilac));
+      z-index: -1; animation: spin 8s linear infinite;
+    }
+    .hero-bubble-wrap {
+      position: relative; display: inline-block;
+    }
+    .hero-bubble-wrap::after {
+      content: '';
+      position: absolute; inset: -14px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.6);
+      z-index: -2;
+    }
+
+    /* Floating sticker amigurumis around hero */
+    .hero-float {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,.65);
+      border: 3px solid rgba(255,255,255,.9);
+      box-shadow: 0 4px 18px rgba(123,94,167,.18);
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-float img { width: 88%; height: 88%; object-fit: contain; }
+    .hero-float.f1 { width:100px;height:100px; top:10%;left:2%; animation:floatBounce 3.8s ease-in-out infinite; }
+    .hero-float.f2 { width:80px;height:80px; bottom:18%;left:5%; animation:floatBounceAlt 4.2s ease-in-out infinite; }
+    .hero-float.f3 { width:90px;height:90px; top:12%;right:3%; animation:floatBounce 3.5s ease-in-out infinite .6s; }
+    .hero-float.f4 { width:75px;height:75px; bottom:20%;right:6%; animation:floatBounceAlt 4s ease-in-out infinite 1s; }
+
+    /* Hero bottom wave */
+    .hero-wave { position:absolute; bottom:0; left:0; right:0; width:100%; }
+
+    /* ── SHARED SECTION ── */
+    section { padding: 80px 60px; }
+    .section-head { text-align: center; margin-bottom: 52px; }
+    .pill-label {
+      display: inline-block; background: var(--blue); color: var(--dark);
+      border-radius: 999px; padding: 4px 18px; font-size: .78rem;
+      font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .section-title { font-family: 'Fredoka One', cursive; font-size: 2.4rem; color: var(--dark); margin-bottom: 10px; }
+    .section-sub { font-size: 1.05rem; color: #7a5e90; }
+    .wave { display: block; width: 100%; line-height: 0; }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--white);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .about-text .section-title, .about-text .section-sub { text-align: left; }
+    .about-text p { font-size: 1.05rem; line-height: 1.8; color: #5a4060; margin-bottom: 16px; }
+    .feature-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .feature-pill {
+      background: var(--cream); border: 2px solid var(--lilac);
+      border-radius: 999px; padding: 8px 20px; font-weight: 700; font-size: .9rem; color: var(--dark);
+    }
+    /* About hero image */
+    .about-img-col { display: flex; justify-content: center; align-items: center; }
+    .about-main-img {
+      width: 340px; height: 340px; object-fit: contain;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lilac), var(--blue));
+      padding: 16px;
+      box-shadow: 0 12px 50px rgba(123,94,167,.25), 0 0 0 8px rgba(215,184,244,.35);
+      animation: floatBounce 5s ease-in-out infinite;
+      filter: drop-shadow(0 8px 20px rgba(74,53,72,.14));
+    }
+
+    /* ── VIDEO ── */
+    #video { background: linear-gradient(180deg, var(--lilac) 0%, var(--blue) 100%); text-align: center; }
+    .video-wrap {
+      max-width: 820px; margin: 0 auto;
+      border-radius: 28px; overflow: hidden;
+      box-shadow: 0 16px 60px rgba(74,53,72,.28);
+      border: 5px solid rgba(255,255,255,.65);
+      background: var(--dark); aspect-ratio: 16/9;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .video-placeholder { display: flex; flex-direction: column; align-items: center; gap: 18px; color: var(--cream); }
+    .video-placeholder .play-icon { animation: pulse 2.5s ease-in-out infinite; }
+    .video-placeholder .vt { font-family: 'Fredoka One', cursive; font-size: 1.3rem; opacity: .88; }
+    .video-placeholder .vs { font-size: .85rem; opacity: .6; font-family: 'Nunito', sans-serif; }
+
+    /* ── GALLERY / COLECCIÓN ── */
+    #gallery { background: var(--cream); text-align: center; }
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 28px; max-width: 1120px; margin: 0 auto;
+    }
+
+    /* Animal card */
+    .animal-card {
+      background: white; border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(123,94,167,.13);
+      border: 3px solid var(--lilac);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s;
+      cursor: pointer; position: relative;
+    }
+    .animal-card:hover {
+      transform: translateY(-12px) scale(1.03) rotate(.8deg);
+      box-shadow: 0 20px 48px rgba(123,94,167,.28);
+    }
+    /* Shine overlay on hover */
+    .animal-card::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 2; border-radius: 28px;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.4) 50%, rgba(255,255,255,0) 70%);
+      background-size: 200% 100%; opacity: 0;
+      transition: opacity .3s;
+      pointer-events: none; /* no bloquea clics a los elementos hijos */
+    }
+    .animal-card:hover::before { opacity: 1; animation: shimmer .8s ease forwards; }
+
+    .animal-card-img {
+      width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      padding: 12px;
+    }
+    /* Gradient background per card type */
+    .animal-card-img.bee    { background: linear-gradient(135deg, #fff9d6, #fef0a0); }
+    .animal-card-img.frog   { background: linear-gradient(135deg, #d6f5e0, #b8edca); }
+    .animal-card-img.turtle { background: linear-gradient(135deg, #d6f0d6, #c0e8b8); }
+    .animal-card-img.cow    { background: linear-gradient(135deg, #f0eeff, #e0d8ff); }
+
+    .animal-card-img img {
+      width: 85%; height: 85%; object-fit: contain;
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1), filter .4s;
+      filter: drop-shadow(0 4px 12px rgba(74,53,72,.14));
+      position: relative; z-index: 1;
+    }
+    .animal-card:hover .animal-card-img img {
+      transform: scale(1.12) translateY(-4px);
+      filter: drop-shadow(0 10px 22px rgba(74,53,72,.22));
+    }
+
+    /* Decorative dots on card bg */
+    .animal-card-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.5) 1px, transparent 1px);
+      background-size: 18px 18px; z-index: 0;
+    }
+
+    /* Thumbnail strip */
+    .animal-thumbs {
+      display: flex; gap: 8px; padding: 10px 14px;
+      border-top: 2px solid var(--lilac); background: rgba(215,184,244,.08);
+      position: relative; z-index: 3; /* por encima del overlay shimmer */
+    }
+    .animal-thumb {
+      flex: 1; aspect-ratio: 1; border-radius: 12px; overflow: hidden;
+      border: 2px solid transparent; cursor: pointer;
+      transition: border-color .25s, transform .25s;
+    }
+    .animal-thumb:hover, .animal-thumb.active { border-color: var(--dark); transform: scale(1.08); }
+    .animal-thumb img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+    .animal-card-label {
+      padding: 14px 16px 16px; font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem; color: var(--dark); text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .card-badge {
+      display: inline-block; font-size: .72rem; font-weight: 800;
+      background: var(--lilac); color: var(--dark); border-radius: 999px;
+      padding: 3px 10px; letter-spacing: .5px; text-transform: uppercase;
+    }
+
+    /* ── SOCIAL ── */
+    #social { background: white; text-align: center; }
+    .social-cards { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 20px; }
+    .social-card {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      background: var(--white); border: 3px solid var(--lilac); border-radius: 24px;
+      padding: 30px 38px; text-decoration: none; color: var(--dark);
+      font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+      transition: all .3s; box-shadow: 0 4px 18px rgba(123,94,167,.1); min-width: 158px;
+    }
+    .social-card:hover { transform: translateY(-6px) scale(1.05); box-shadow: 0 12px 32px rgba(123,94,167,.22); }
+    .social-card.ig:hover { background: #f4c5d7; border-color: #e07ba0; }
+    .social-card.fb:hover { background: #b8bef4; border-color: #7b87e0; }
+    .social-card.tt:hover { background: #c5f4e0; border-color: #70d4a0; }
+    .social-card svg { transition: transform .3s; }
+    .social-card:hover svg { transform: scale(1.2) rotate(-8deg); }
+    .social-handle { font-size: .8rem; font-family: 'Nunito', sans-serif; opacity: .7; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--dark); color: var(--cream); text-align: center; padding: 44px 20px; }
+    .footer-logo { font-family: 'Fredoka One', cursive; font-size: 1.8rem; margin-bottom: 8px; }
+    footer p { font-size: .9rem; opacity: .75; }
+    footer .small { font-size: .78rem; opacity: .45; margin-top: 8px; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:860px){
+      #hero { grid-template-columns:1fr; padding:100px 24px 60px; text-align:center; }
+      .hero-img-wrap { margin-top: 32px; }
+      .hero-bubble { width:280px; height:280px; }
+      .hero-float.f1,.hero-float.f2 { display:none; }
+      #about { grid-template-columns:1fr; padding:60px 24px; }
+      .about-text .section-title,.about-text .section-sub { text-align:center; }
+      section { padding:60px 24px; }
+      nav { padding:10px 20px; }
+      .nav-links { display:none; }
+      .about-img-col { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── BLOB BG ─────────────────────────────── -->
+<svg class="blob-bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="200" cy="150" rx="280" ry="220" fill="#D7B8F4" opacity="0.22" style="animation-delay:0s"/>
+  <ellipse cx="1300" cy="200" rx="220" ry="180" fill="#B8B8F4" opacity="0.18" style="animation-delay:-3s"/>
+  <ellipse cx="900" cy="700" rx="260" ry="200" fill="#F5E2C8" opacity="0.28" style="animation-delay:-5s"/>
+  <ellipse cx="100" cy="800" rx="180" ry="140" fill="#F4C5D7" opacity="0.18" style="animation-delay:-2s"/>
+</svg>
+
+<!-- ── NAVBAR ─────────────────────────────── -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <img src="img/logo.png" alt="AmiguGigi Logo" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#hero">Inicio</a></li>
+    <li><a href="#about">Nosotros</a></li>
+    <li><a href="#video">Video</a></li>
+    <li><a href="#gallery">Colecci&#243;n</a></li>
+    <li><a href="#social">Redes</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ───────────────────────────────── -->
+<section id="hero">
+
+  <!-- Floating mini stickers -->
+  <div class="hero-float f1"><img src="img/rana 1.png" alt="Ranita" /></div>
+  <div class="hero-float f2"><img src="img/tortuga 1.png" alt="Tortuga" /></div>
+  <div class="hero-float f3"><img src="img/vaca 1.png" alt="Vaca" /></div>
+  <div class="hero-float f4"><img src="img/abeja 2.png" alt="Abeja" /></div>
+
+  <div class="hero-text">
+    <div class="hero-badge">&#x1F9F6; Bogot&#225;, Colombia</div>
+    <h1 class="hero-title">
+      Tejido con amor,<br/>
+      <span>esponjoso</span><br/>
+      por naturaleza &#x1F43E;
+    </h1>
+    <p class="hero-desc">
+      Amigurumis &#250;nicos tejidos a mano con lana <strong>chenille</strong> ultra suave.
+      Cada mu&#241;eco es una obra de arte esponjosa, redondita y llena de ternura,
+      creada especialmente para ti en Bogot&#225;. &#x1F338;
+    </p>
+    <a href="#gallery" class="btn-primary">Ver colecci&#243;n &#x1F43E;</a>
+    <a href="#social" class="btn-outline">Seguirnos &#x1F49C;</a>
+  </div>
+
+  <div class="hero-img-wrap">
+    <div class="hero-bubble-wrap">
+      <div class="hero-bubble">
+        <img src="img/abeja 1.png" alt="Abeja Amigurumi AmiguGigi" id="hero-main-img" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave -->
+  <svg class="hero-wave" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 C1320,60 1400,20 1440,40 L1440,80 L0,80Z" fill="white"/>
+  </svg>
+</section>
+
+<!-- ── ABOUT ───────────────────────────────── -->
+<section id="about">
+  <div class="about-text reveal">
+    <div class="section-head" style="text-align:left;margin-bottom:28px">
+      <span class="pill-label">&#x1F9F8; Qui&#233;nes somos</span>
+      <h2 class="section-title">Amor tejido punto<br/>a punto</h2>
+      <p class="section-sub">Tu tienda de amigurumis hecha con pasi&#243;n en Bogot&#225;</p>
+    </div>
+    <p>
+      En <strong>AmiguGigi</strong> creamos amigurumis &#250;nicos tejidos a mano con lana <strong>chenille</strong>,
+      el material m&#225;s suave y esponjoso del mercado. Cada mu&#241;eco es dise&#241;ado con amor,
+      redondito y lleno de personalidad.
+    </p>
+    <p>
+      Nacimos en Bogot&#225; con la misi&#243;n de llevar ternura a cada hogar colombiano y al mundo.
+      Nuestros amigurumis son perfectos para regalar, coleccionar o simplemente abrazar. &#x1F43E;&#x1F49C;
+    </p>
+    <div class="feature-pills">
+      <span class="feature-pill">&#x2728; Hecho a mano</span>
+      <span class="feature-pill">&#x1F9F6; Lana chenille</span>
+      <span class="feature-pill">&#x1F43E; Dise&#241;os &#250;nicos</span>
+      <span class="feature-pill">&#x1F381; Perfectos para regalar</span>
+      <span class="feature-pill">&#x1F3D9;&#xFE0F; Bogot&#225;, Colombia</span>
+    </div>
+  </div>
+  <div class="about-img-col reveal">
+    <img class="about-main-img" src="img/vaca 1.png" alt="Vaca amigurumi chenille" />
+  </div>
+</section>
+
+<!-- Wave -->
+<svg class="wave" viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:var(--white)">
+  <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="#D7B8F4"/>
+</svg>
+
+<!-- ── VIDEO ───────────────────────────────── -->
+<section id="video" style="background:linear-gradient(180deg,#D7B8F4 0%,#B8B8F4 100%);text-align:center;">
+  <div class="section-head reveal">
+    <span class="pill-label">&#x1F3AC; Video Promocional</span>
+    <h2 class="section-title">&#161;Mira la magia de<br/>nuestras creaciones!</h2>
+    <p class="section-sub">Tejemos cada amigurumi con lana chenille ultra suave &#183; hechos con amor en Bogot&#225;</p>
+  </div>
+  <div class="video-wrap reveal">
+    <!-- PARA AGREGAR TU VIDEO: reemplaza el div.video-placeholder con:
+         <iframe src="https://www.youtube.com/embed/TU_VIDEO_ID"
+                 allow="autoplay; fullscreen" allowfullscreen></iframe>        -->
+    <div class="video-placeholder">
+      <svg class="play-icon" width="82" height="82" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="41" cy="41" r="38" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
+        <polygon points="33,25 63,41 33,57" fill="white"/>
+      </svg>
+      <p class="vt">Video promocional pr&#243;ximamente &#x1F9F6;</p>
+      <p class="vs">Pega aqu&#237; tu enlace de YouTube o TikTok</p>
+    </div>
+  </div>
+</section>
+
+<!-- Wave -->
+<svg class="wave" viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:#B8B8F4">
+  <path d="M0,20 C240,60 480,0 720,30 C960,60 1200,10 1440,30 L1440,60 L0,60Z" fill="#F5E2C8"/>
+</svg>
+
+<!-- ── GALLERY ─────────────────────────────── -->
+<section id="gallery" style="background:var(--cream);">
+  <div class="section-head reveal">
+    <span class="pill-label">&#x1F43E; Colecci&#243;n</span>
+    <h2 class="section-title">Nuestros Amigurumis</h2>
+    <p class="section-sub">Tejidos a mano con lana chenille esponjosa &#183; Bogot&#225; &#x1F338;</p>
+  </div>
+
+  <div class="gallery-grid">
+
+    <!-- ▌ ABEJA ▌ -->
+    <div class="animal-card reveal" data-type="abeja">
+      <div class="animal-card-img bee">
+        <img id="abeja-main" src="img/abeja 1.png" alt="Abeja amigurumi chenille" />
+      </div>
+      <div class="animal-thumbs">
+        <div class="animal-thumb active" onclick="switchImg('abeja','img/abeja 1.png',this)">
+          <img src="img/abeja 1.png" alt="Abeja vista 1" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('abeja','img/abeja 2.png',this)">
+          <img src="img/abeja 2.png" alt="Abeja vista 2" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('abeja','img/abeja 3.png',this)">
+          <img src="img/abeja 3.png" alt="Abeja vista 3" />
+        </div>
+      </div>
+      <div class="animal-card-label">
+        &#x1F41D; Abejita Dulce
+        <span class="card-badge">Chenille</span>
+      </div>
+    </div>
+
+    <!-- ▌ RANA ▌ -->
+    <div class="animal-card reveal" data-type="rana" style="transition-delay:.1s">
+      <div class="animal-card-img frog">
+        <img id="rana-main" src="img/rana 1.png" alt="Rana amigurumi chenille" />
+      </div>
+      <div class="animal-thumbs">
+        <div class="animal-thumb active" onclick="switchImg('rana','img/rana 1.png',this)">
+          <img src="img/rana 1.png" alt="Rana vista 1" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('rana','img/rana 2.png',this)">
+          <img src="img/rana 2.png" alt="Rana vista 2" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('rana','img/rana 3.png',this)">
+          <img src="img/rana 3.png" alt="Rana vista 3" />
+        </div>
+      </div>
+      <div class="animal-card-label">
+        &#x1F438; Ranita Verde
+        <span class="card-badge">Chenille</span>
+      </div>
+    </div>
+
+    <!-- ▌ TORTUGA ▌ -->
+    <div class="animal-card reveal" data-type="tortuga" style="transition-delay:.2s">
+      <div class="animal-card-img turtle">
+        <img id="tortuga-main" src="img/tortuga 1.png" alt="Tortuga amigurumi chenille" />
+      </div>
+      <div class="animal-thumbs">
+        <div class="animal-thumb active" onclick="switchImg('tortuga','img/tortuga 1.png',this)">
+          <img src="img/tortuga 1.png" alt="Tortuga vista 1" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('tortuga','img/tortuga 2.png',this)">
+          <img src="img/tortuga 2.png" alt="Tortuga vista 2" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('tortuga','img/tortuga 3.png',this)">
+          <img src="img/tortuga 3.png" alt="Tortuga vista 3" />
+        </div>
+      </div>
+      <div class="animal-card-label">
+        &#x1F422; Tortugui&#241;a
+        <span class="card-badge">Chenille</span>
+      </div>
+    </div>
+
+    <!-- ▌ VACA ▌ -->
+    <div class="animal-card reveal" data-type="vaca" style="transition-delay:.3s">
+      <div class="animal-card-img cow">
+        <img id="vaca-main" src="img/vaca 1.png" alt="Vaca amigurumi chenille" />
+      </div>
+      <div class="animal-thumbs">
+        <div class="animal-thumb active" onclick="switchImg('vaca','img/vaca 1.png',this)">
+          <img src="img/vaca 1.png" alt="Vaca vista 1" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('vaca','img/vaca 2.png',this)">
+          <img src="img/vaca 2.png" alt="Vaca vista 2" />
+        </div>
+        <div class="animal-thumb" onclick="switchImg('vaca','img/vaca 3.png',this)">
+          <img src="img/vaca 3.png" alt="Vaca vista 3" />
+        </div>
+      </div>
+      <div class="animal-card-label">
+        &#x1F404; Vaquita Flor
+        <span class="card-badge">Chenille</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Wave -->
+<svg class="wave" viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:var(--cream)">
+  <path d="M0,30 C360,0 720,60 1080,20 C1260,0 1380,50 1440,30 L1440,60 L0,60Z" fill="white"/>
+</svg>
+
+<!-- ── SOCIAL ───────────────────────────────── -->
+<section id="social" style="background:white;text-align:center;">
+  <div class="section-head reveal">
+    <span class="pill-label">&#x1F4F2; S&#237;guenos</span>
+    <h2 class="section-title">&#161;Encu&#233;ntranos en<br/>redes sociales!</h2>
+    <p class="section-sub">Comparte el amor por los amigurumis &#183; @AmiguGigi &#x1F9F6;</p>
+  </div>
+  <div class="social-cards">
+
+    <a href="https://www.instagram.com/amigugigi" target="_blank" rel="noopener" class="social-card ig reveal">
+      <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ig" x1="0" y1="54" x2="54" y2="0">
+            <stop offset="0%" stop-color="#f09433"/>
+            <stop offset="25%" stop-color="#e6683c"/>
+            <stop offset="50%" stop-color="#dc2743"/>
+            <stop offset="75%" stop-color="#cc2366"/>
+            <stop offset="100%" stop-color="#bc1888"/>
+          </linearGradient>
+        </defs>
+        <rect width="54" height="54" rx="16" fill="url(#ig)"/>
+        <rect x="14" y="14" width="26" height="26" rx="8" stroke="white" stroke-width="2.8" fill="none"/>
+        <circle cx="27" cy="27" r="7" stroke="white" stroke-width="2.8" fill="none"/>
+        <circle cx="37.2" cy="16.8" r="2" fill="white"/>
+      </svg>
+      Instagram
+      <span class="social-handle">@AmiguGigi</span>
+    </a>
+
+    <a href="https://www.facebook.com/amigugigi" target="_blank" rel="noopener" class="social-card fb reveal" style="transition-delay:.1s">
+      <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="54" height="54" rx="16" fill="#1877F2"/>
+        <path d="M30 28h4l1-5h-5v-2c0-1.5.5-2.5 2.5-2.5H35v-4.5C34 14 32.5 14 31 14c-4.5 0-7 2.5-7 7v2h-4v5h4v14h6V28z" fill="white"/>
+      </svg>
+      Facebook
+      <span class="social-handle">AmiguGigi</span>
+    </a>
+
+    <a href="https://www.tiktok.com/@amigugigi" target="_blank" rel="noopener" class="social-card tt reveal" style="transition-delay:.2s">
+      <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="54" height="54" rx="16" fill="#010101"/>
+        <path d="M35 20.5C36.8 22 39 22.5 41 22.5v-4c-1 0-3-.5-4-1.5V30c0 4-3 7-7 7s-7-3-7-7 3-7 7-7c.5 0 1 0 1.5.1v-4.2C30.4 19 30 19 30 19c-6 0-11 4.8-11 10.5S24 40 30 40s11-4.8 11-10.5V20.5H35z" fill="white"/>
+      </svg>
+      TikTok
+      <span class="social-handle">@AmiguGigi</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────── -->
+<footer>
+  <div style="font-size:2.1rem;margin-bottom:16px;display:flex;justify-content:center;gap:18px;animation:wiggle 2.2s ease-in-out infinite">
+    &#x1F9F6; &#x1F41D; &#x1F438; &#x1F422; &#x1F404; &#x1F9F6;
+  </div>
+  <div class="footer-logo">@AmiguGigi</div>
+  <p>Amigurumis tejidos con &#x2764;&#xFE0F; en Bogot&#225;, Colombia</p>
+  <p class="small">&#169; 2026 AmiguGigi &#183; Todos los derechos reservados</p>
+</footer>
+
+<!-- ── SCRIPTS ────────────────────────────── -->
+<script>
+  /* Scroll reveal */
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.14 });
+  revealEls.forEach(el => io.observe(el));
+
+  /* Active nav */
+  const secs = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    links.forEach(l => { l.style.color = l.getAttribute('href') === '#'+cur ? '#7B5EA7' : ''; });
+  }, { passive: true });
+
+  /* Card image switcher */
+  function switchImg(type, src, thumb) {
+    const main = document.getElementById(type + '-main');
+    // fade out
+    main.style.opacity = '0';
+    main.style.transform = 'scale(.9)';
+    setTimeout(() => {
+      main.src = src;
+      main.style.opacity = '1';
+      main.style.transform = 'scale(1)';
+    }, 200);
+    main.style.transition = 'opacity .2s, transform .2s';
+    // update active thumb
+    const thumbs = thumb.closest('.animal-thumbs').querySelectorAll('.animal-thumb');
+    thumbs.forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+  }
+
+  /* Hero image cycler (changes every 3s) */
+  const heroImgs = ['img/abeja 1.png','img/rana 1.png','img/tortuga 1.png','img/vaca 1.png'];
+  let heroIdx = 0;
+  const heroMain = document.getElementById('hero-main-img');
+  setInterval(() => {
+    heroIdx = (heroIdx + 1) % heroImgs.length;
+    heroMain.style.opacity = '0';
+    heroMain.style.transform = 'scale(.85) rotate(-4deg)';
+    heroMain.style.transition = 'all .4s ease';
+    setTimeout(() => {
+      heroMain.src = heroImgs[heroIdx];
+      heroMain.style.opacity = '1';
+      heroMain.style.transform = 'scale(1) rotate(0deg)';
+    }, 400);
+  }, 3200);
+</script>
+</body>
+</html>
